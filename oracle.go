@@ -235,7 +235,7 @@ func (d Dialector) Initialize(db *gorm.DB) (err error) {
 			_ = go_ora.AddSessionParam(sqlDB, "NLS_SORT", "BINARY_CI")
 		}
 	}
-	err = db.ConnPool.QueryRowContext(context.Background(), "select OB_VERSION() from DUAL").Scan(&d.DBVer)
+	err = db.ConnPool.QueryRowContext(context.Background(), "select CAST(REGEXP_SUBSTR(banner,'(\\d+)\\.\\d+\\.\\d+') AS VARCHAR2(30)) as version  from v$version where ROWNUM=1").Scan(&d.DBVer)
 	if err != nil {
 		return err
 	}
